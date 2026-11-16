@@ -47,7 +47,7 @@
 | SmotrimFlims | ✅ | ✅ |
 | Смотреть в Онлайн (Tatnet LIVE) | ✅ | ✅ |
 | CdnVideoHub | ✅ | ✅ |
-| Tatnet Player JS (без рекламы) | ✅ | ✅ |
+| Оригинал Kinoflex (PlayerJS) | ✅ | ✅ |
 
 ---
 

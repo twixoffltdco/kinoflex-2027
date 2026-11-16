@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kinoflex — Оригинальная дорожка</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:system-ui,sans-serif}
+  #playerjs-container,iframe,video{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:contain;background:#000}
+  #status{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:#94a3b8;font-size:14px;text-align:center;padding:20px;z-index:5;
+  }
+  #status.hidden{display:none}
+  .spinner{
+    width:36px;height:36px;border:3px solid rgba(139,92,246,.3);border-top-color:#8b5cf6;
+    border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  #sources{
+    position:absolute;top:8px;right:8px;z-index:20;display:flex;flex-wrap:wrap;gap:4px;
+    max-width:70%;justify-content:flex-end;
+  }
+  #sources button{
+    background:rgba(15,15,25,.85);color:#e2e8f0;border:1px solid rgba(139,92,246,.4);
+    border-radius:8px;padding:4px 10px;font-size:11px;cursor:pointer;backdrop-filter:blur(8px);
+  }
+  #sources button:hover,#sources button.active{background:#8b5cf6;color:#fff;border-color:#8b5cf6}
+</style>
+</head>
+<body>
+  <div id="status">
+    <div>
+      <div class="spinner"></div>
+      <div id="statusText">Загрузка оригинальной дорожки…</div>
+    </div>
+  </div>
+  <div id="sources"></div>
+  <div id="playerjs-container"></div>
+
+  <script src="./playerjs.js"></script>
+  <script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var kp = params.get('kinopoisk') || params.get('kp') || params.get('id') || '';
+  var statusEl = document.getElementById('status');
+  var statusText = document.getElementById('statusText');
+  var box = document.getElementById('playerjs-container');
+  var sourcesEl = document.getElementById('sources');
+  var currentPlayer = null;
+
+  function setStatus(msg, hide) {
+    statusText.textContent = msg || '';
+    statusEl.classList.toggle('hidden', !!hide);
+  }
+
+  function clearPlayer() {
+    box.innerHTML = '';
+    currentPlayer = null;
+  }
+
+  function playWithPlayerJS(file) {
+    clearPlayer();
+    setStatus('', true);
+    try {
+      if (typeof Playerjs === 'undefined') {
+        // fallback native video
+        var v = document.createElement('video');
+        v.controls = true;
+        v.autoplay = true;
+        v.playsInline = true;
+        v.src = file;
+        v.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;background:#000';
+        box.appendChild(v);
+        return;
+      }
+      currentPlayer = new Playerjs({
+        id: 'playerjs-container',
+        file: file,
+        autoplay: 1
+      });
+    } catch (e) {
+      console.error(e);
+      setStatus('Ошибка PlayerJS: ' + (e.message || e));
+    }
+  }
+
+  function playIframe(url) {
+    clearPlayer();
+    setStatus('', true);
+    var iframe = document.createElement('iframe');
+    iframe.src = url;
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen';
+    iframe.allowFullscreen = true;
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.setAttribute('frameborder', '0');
+    box.appendChild(iframe);
+  }
+
+  // Список кандидатов-источников для kinopoisk ID (как «оригинальная дорожка» + наши)
+  function buildCandidates(id) {
+    if (!id) return [];
+    return [
+      {
+        name: 'Оригинал (Kinoflex)',
+        // наш плеер через cdnplayerjs если есть прямой src — иначе iframe обёртки
+        type: 'iframe',
+        url: 'https://cdnhubvideo.vercel.app/#kp/' + encodeURIComponent(id)
+      },
+      {
+        name: 'SmotrimFlims',
+        type: 'iframe',
+        url: 'https://smotrimfilms.lovable.app/kp/' + encodeURIComponent(id)
+      },
+      {
+        name: 'Tatnet LIVE',
+        type: 'iframe',
+        url: 'https://live.tatnet.app/live/player.html?kinopoisk=' + encodeURIComponent(id)
+      },
+      {
+        name: 'CdnVideoHub',
+        type: 'iframe',
+        url: 'https://cdnhubvideo.vercel.app/#kp/' + encodeURIComponent(id)
+      }
+    ];
+  }
+
+  // Попытка получить прямой поток из kinobox API (если доступен)
+  async function tryKinoboxApi(id) {
+    try {
+      var url = 'https://api.kinobox.tv/api/players?kinopoisk=' + encodeURIComponent(id);
+      var res = await fetch(url, { signal: AbortSignal.timeout(6000) });
+      if (!res.ok) return null;
+      var json = await res.json();
+      if (!json || !json.data) return null;
+      var items = json.data.filter(function (x) { return x && x.iframeUrl; });
+      return items.map(function (x) {
+        return {
+          name: (x.type || 'Источник') + (x.translations && x.translations[0] ? ' · ' + (x.translations[0].name || '') : ''),
+          type: 'iframe',
+          url: x.iframeUrl
+        };
+      });
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function renderSourceButtons(list) {
+    sourcesEl.innerHTML = '';
+    list.forEach(function (item, i) {
+      var btn = document.createElement('button');
+      btn.textContent = item.name;
+      if (i === 0) btn.classList.add('active');
+      btn.onclick = function () {
+        Array.prototype.forEach.call(sourcesEl.querySelectorAll('button'), function (b) {
+          b.classList.remove('active');
+        });
+        btn.classList.add('active');
+        loadSource(item);
+      };
+      sourcesEl.appendChild(btn);
+    });
+  }
+
+  function loadSource(item) {
+    setStatus('Подключение: ' + item.name + '…');
+    if (item.type === 'file' || item.type === 'stream') {
+      playWithPlayerJS(item.url);
+    } else {
+      playIframe(item.url);
+    }
+  }
+
+  async function init() {
+    if (!kp) {
+      setStatus('Не указан kinopoisk ID. Пример: original-player.html?kinopoisk=7283766');
+      return;
+    }
+
+    setStatus('Поиск оригинальной дорожки для KP ' + kp + '…');
+
+    var apiSources = await tryKinoboxApi(kp);
+    var list = [];
+
+    if (apiSources && apiSources.length) {
+      // Берём API-источники (в т.ч. «оригинальная») + наши
+      list = apiSources.concat(buildCandidates(kp));
+    } else {
+      list = buildCandidates(kp);
+    }
+
+    // Убираем дубли по url
+    var seen = {};
+    list = list.filter(function (x) {
+      if (!x.url || seen[x.url]) return false;
+      seen[x.url] = true;
+      return true;
+    });
+
+    if (!list.length) {
+      setStatus('Источники не найдены для этого фильма');
+      return;
+    }
+
+    renderSourceButtons(list);
+    loadSource(list[0]);
+  }
+
+  init();
+})();
+  </script>
+</body>
+</html>
