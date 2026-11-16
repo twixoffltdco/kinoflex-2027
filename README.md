@@ -1,0 +1,68 @@
+# 🎬 Kinoflex
+
+> Плеер нового поколения для фильмов и сериалов. Быстро, бесплатно, без регистрации.
+
+[![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
+[![Version](https://img.shields.io/badge/version-3.0.0-green?style=for-the-badge)]()
+
+---
+
+## 🚀 Деплой (один клик)
+
+### Vercel
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/twixoffltdco/kinoboxtv)
+
+> `vercel.json` уже настроен. После деплоя всё работает.
+
+### Netlify
+Подключи репо — `_redirects` обрабатывает роутинг автоматически.
+
+### Apache / cPanel
+Загрузи файлы в `public_html`, `.htaccess` уже в корне.
+
+---
+
+## 📌 Как работает роутинг
+
+Сайт использует **hash-роутинг** — он работает на любом хостинге без серверных настроек.
+
+```
+
+При обновлении страницы — всё работает корректно ✅
+
+---
+
+
+## 🌐 Поддерживаемые источники
+
+| Источник | Фильмы | Сериалы |
+|---|---|---|
+| Collaps | ✅ | ✅ |
+| Alloha | ✅ | ✅ |
+| HDVB | ✅ | ✅ |
+| Kodik | ✅ | ✅ |
+| VideoCDN | ✅ | ✅ |
+| Bazon | ✅ | ✅ |
+| Ashdi | ✅ | ✅ |
+| SmotrimFlims | ✅ | ✅ |
+| Смотреть в Онлайн (Tatnet LIVE) | ✅ | ✅ |
+| CdnVideoHub | ✅ | ✅ |
+| Tatnet Player JS (без рекламы) | ✅ | ✅ |
+
+---
+
+## ⏱ Реклама
+
+- Встроена реклама каждые **15 минут** просмотра.
+- Для активации добавьте ссылки на `.mp4` файлы рекламы в `ad.js`.
+
+---
+
+## 🎨 Обновлённый дизайн
+
+- Полностью переработана **TYPOGRAPHY секция** в `index.html`.
+- Улучшены стили для заголовков, текста, списков, code-блоков, таблиц и карточек FAQ.
+
+## 📜 Лицензия
+
+MIT License © 2025 Kinoflex

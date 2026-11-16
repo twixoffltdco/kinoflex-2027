@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<meta name="description" content="Kinoflex — Kinoflex — быстрый плеер фильмов и сериалов. Новый дизайн, без лишнего.">
+<meta name="keywords" content="кино онлайн, сериалы онлайн, фильмы бесплатно, kinobox">
+<meta property="og:title" content="Kinoflex — Кино и сериалы онлайн — Kinoflex">
+<meta property="og:description" content="Быстрый плеер для фильмов и сериалов. Без регистрации.">
+<meta property="og:type" content="website">
+<title>Kinoflex — Кино и сериалы онлайн — Kinoflex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===========================
+   GLASSMORPHISM STYLE - Kinoflex
+   Стиль "Жидкое Стекло" - Зеленая гамма
+=========================== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0a1a;--bg-card:rgba(20,15,40,0.65);--bg-deep:rgba(10,8,25,0.85);
+  --border:rgba(255,255,255,0.12);--border2:rgba(255,255,255,0.08);
+  --accent:#8b5cf6;--accent2:#a78bfa;
+  --text:#ffffff;--dim:rgba(255,255,255,0.85);--muted:rgba(255,255,255,0.5);
+  --r-lg:28px;--r-md:20px;--r-sm:12px;--r-pill:60px;
+  --glass-bg:rgba(255,255,255,0.08);
+  --glass-border:rgba(255,255,255,0.15);
+  --glass-shadow:0 8px 32px rgba(0,0,0,0.45);
+  --glass-blur:blur(18px);
+  --glow:rgba(139,92,246,0.5);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Montserrat',sans-serif;background:linear-gradient(135deg,#0c0a1a,#1a0f2e);color:var(--text);line-height:1.6;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 20% 80%,rgba(139,92,246,0.18),transparent 50%),radial-gradient(circle at 80% 20%,rgba(167,139,250,0.12),transparent 50%);pointer-events:none;z-index:-1;animation:gfm 15s ease-in-out infinite alternate}
+@keyframes gfm{from{transform:translate(0,0)}to{transform:translate(-2%,2%)}}
+
+/* ===========================
+   LAYOUT
+=========================== */
+.wrapper{max-width:1200px;margin:0 auto;padding:14px 18px 60px}
+
+/* ===========================
+   NAV - Glass Style
+=========================== */
+.nav{
+  display:flex;align-items:center;flex-wrap:wrap;gap:4px;
+  justify-content:center;margin-bottom:18px;
+  background:rgba(15,20,34,0.7);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  padding:8px 14px;border-radius:var(--r-pill);border:1px solid var(--glass-border);
+  position:sticky;top:8px;z-index:100;
+  box-shadow:var(--glass-shadow),inset 0 0 30px rgba(255,255,255,0.05);
+}
+.nav-logo{font-weight:700;font-size:1rem;color:#fff!important;margin-right:6px;text-decoration:none;text-shadow:0 2px 10px rgba(99,102,241,0.5)}
+.nav a{
+  color:var(--dim);text-decoration:none;font-weight:500;font-size:.82rem;
+  padding:6px 14px;border-radius:var(--r-pill);transition:.25s cubic-bezier(0.4,0,0.2,1);white-space:nowrap;
+  position:relative;overflow:hidden;
+}
+.nav a::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);transition:left .4s}
+.nav a:hover::before{left:100%}
+.nav a:hover{background:rgba(16,185,129,0.25);color:#fff;box-shadow:0 4px 15px rgba(16,185,129,0.3)}
+.nav a.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 4px 20px var(--glow),inset 0 0 15px rgba(255,255,255,0.2)}
+
+/* ===========================
+   CONTAINER - Glass Card
+=========================== */
+.box{
+  background:var(--glass-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  border-radius:var(--r-lg);padding:26px;min-height:500px;
+  box-shadow:var(--glass-shadow);border:1px solid var(--glass-border);
+}
+
+/* ===========================
+   PAGES
+=========================== */
+.page{display:none;animation:fp .2s ease}
+.page.on{display:block}
+@keyframes fp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+
+/* ===========================
+   PLAYER - Glass Style
+=========================== */
+.ph{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.ph h2{font-size:1.25rem;font-weight:600;background:linear-gradient(135deg,#fff,var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 2px 15px rgba(16,185,129,0.3)}
+.badge{background:rgba(26,50,40,0.8);backdrop-filter:blur(10px);padding:5px 14px;border-radius:var(--r-pill);font-size:.78rem;font-family:monospace;color:#86efac;border:1px solid var(--glass-border);box-shadow:0 4px 15px rgba(0,0,0,0.3)}
+#playerBox{
+  width:100%;border-radius:var(--r-md);overflow:hidden;
+  background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);min-height:460px;
+  box-shadow:inset 0 0 50px rgba(0,0,0,0.5),0 10px 40px rgba(0,0,0,0.4);border:1px solid var(--glass-border);
+}
+.hint{margin-top:14px;background:var(--bg-deep);border-radius:var(--r-sm);padding:11px 16px;font-size:12px;text-align:center;color:var(--muted);border:1px solid var(--border2);backdrop-filter:blur(10px)}
+.hint code{background:rgba(16,185,129,0.2);padding:2px 8px;border-radius:6px;color:#86efac;font-family:monospace;border:1px solid rgba(16,185,129,0.3)}
+
+/* ===========================
+   LANDING - Glass Hero
+=========================== */
+.hero{text-align:center;padding:36px 20px 44px;background:rgba(255,255,255,0.03);border-radius:var(--r-lg);border:1px solid var(--glass-border);backdrop-filter:blur(10px)}
+.hero-icon{font-size:3rem;margin-bottom:14px;filter:drop-shadow(0 4px 15px rgba(16,185,129,0.4))}
+.hero h1{font-size:2.6rem;font-weight:700;background:linear-gradient(135deg,#fff,var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:10px;letter-spacing:-1px;text-shadow:0 4px 20px rgba(16,185,129,0.3)}
+.hero p{font-size:1rem;color:var(--dim);margin-bottom:28px}
+.btn{display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;text-decoration:none;padding:13px 34px;border-radius:var(--r-pill);font-weight:600;font-size:.95rem;box-shadow:0 4px 20px var(--glow),inset 0 0 20px rgba(255,255,255,0.15);transition:.25s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden;border:1px solid var(--glass-border)}
+.btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transition:left .5s}
+.btn:hover::before{left:100%}
+.btn:hover{background:linear-gradient(135deg,var(--accent2),#a5b4fc);transform:translateY(-3px);box-shadow:0 8px 30px var(--glow),inset 0 0 25px rgba(255,255,255,0.2)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-bottom:36px}
+.card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--r-md);padding:20px;transition:.25s cubic-bezier(0.4,0,0.2,1);backdrop-filter:blur(10px);box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 8px 30px var(--glow),inset 0 0 20px rgba(16,185,129,0.1)}
+.card-icon{font-size:1.7rem;margin-bottom:10px;filter:drop-shadow(0 2px 10px rgba(16,185,129,0.3))}
+.card h3{font-size:.93rem;font-weight:600;margin-bottom:7px;color:#fff}
+.card p{font-size:.82rem;color:var(--dim)}
+
+.howto{background:var(--bg-deep);border-radius:var(--r-md);padding:24px;border:1px solid var(--glass-border);backdrop-filter:blur(10px);box-shadow:var(--glass-shadow)}
+.howto h2{font-size:1.2rem;color:var(--dim);margin-bottom:18px}
+.steps{display:flex;flex-direction:column;gap:14px}
+.step{display:flex;align-items:flex-start;gap:14px}
+.sn{min-width:34px;height:34px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0;box-shadow:0 4px 15px var(--glow)}
+.step p{font-size:.87rem;color:var(--dim);padding-top:6px}
+.step code{background:rgba(16,185,129,0.2);padding:2px 8px;border-radius:6px;color:#86efac;font-family:monospace;border:1px solid rgba(16,185,129,0.3)}
+
+/* ===========================
+   EMBED PAGE - Glass Style
+=========================== */
+.embed-hero{background:linear-gradient(135deg,rgba(15,40,30,0.8),rgba(10,26,20,0.8));border-radius:var(--r-md);padding:28px;margin-bottom:22px;border:1px solid var(--glass-border);backdrop-filter:blur(15px);box-shadow:var(--glass-shadow)}
+.embed-hero h2{font-size:1.4rem;font-weight:700;margin-bottom:10px;background:linear-gradient(135deg,#fff,var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.embed-hero p{color:var(--dim);font-size:.9rem}
+.embed-methods{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:22px}
+.em{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--r-md);padding:20px;backdrop-filter:blur(10px);transition:.2s}
+.em:hover{border-color:var(--accent);box-shadow:0 6px 25px rgba(16,185,129,0.2)}
+.em-badge{display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:.7rem;font-weight:700;padding:2px 10px;border-radius:20px;margin-bottom:12px;letter-spacing:.5px;box-shadow:0 2px 10px var(--glow)}
+.em h3{font-size:1rem;font-weight:600;margin-bottom:8px;color:#fff}
+.em p{font-size:.83rem;color:var(--dim);margin-bottom:12px}
+.copy-wrap{position:relative}
+.code{
+  background:rgba(5,16,10,0.8);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;font-family:'Courier New',monospace;font-size:.78rem;color:#86efac;
+  line-height:1.8;overflow-x:auto;white-space:pre;margin-top:10px;
+  padding-right:52px;backdrop-filter:blur(8px);
+}
+.copy-btn{
+  position:absolute;top:8px;right:8px;background:rgba(30,52,42,0.8);border:1px solid var(--border);
+  color:var(--dim);font-size:.7rem;padding:4px 10px;border-radius:8px;cursor:pointer;
+  transition:.2s;font-family:'Montserrat',sans-serif;backdrop-filter:blur(8px);
+}
+.copy-btn:hover{background:var(--accent);color:#fff;box-shadow:0 4px 15px var(--glow)}
+.copy-btn.ok{background:#166534;color:#4ade80;border-color:#166534}
+
+.embed-demo{background:var(--glass-bg);border-radius:var(--r-md);padding:22px;border:1px solid var(--glass-border);margin-bottom:20px;backdrop-filter:blur(10px)}
+.embed-demo h3{font-size:1rem;font-weight:600;margin-bottom:8px;color:var(--dim)}
+#demoKpInput{
+  background:rgba(17,34,24,0.8);border:1px solid var(--border);color:var(--text);
+  padding:9px 14px;border-radius:10px;font-family:'Montserrat',sans-serif;
+  font-size:.88rem;width:180px;outline:none;backdrop-filter:blur(8px);
+}
+#demoKpInput:focus{border-color:var(--accent);box-shadow:0 0 15px rgba(16,185,129,0.3)}
+#demoGenBtn{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:9px 20px;
+  border-radius:10px;cursor:pointer;font-weight:600;font-size:.85rem;
+  font-family:'Montserrat',sans-serif;margin-left:8px;transition:.2s;
+  box-shadow:0 4px 15px var(--glow);
+}
+#demoGenBtn:hover{background:linear-gradient(135deg,var(--accent2),#6ee7b7);transform:translateY(-2px);box-shadow:0 6px 20px var(--glow)}
+#demoOutput{margin-top:14px}
+
+/* ===========================
+   TYPOGRAPHY (info pages)
+=========================== */
+.page h1{font-size:1.8rem;font-weight:700;margin-bottom:20px;padding-left:18px;border-left:4px solid var(--accent);line-height:1.3;background:linear-gradient(135deg,#fff,var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.page h2{font-size:1.15rem;font-weight:600;color:var(--dim);margin:26px 0 10px}
+.page p{color:#cddcff;margin-bottom:12px;font-size:.91rem}
+.page ul,.page ol{margin-left:22px;margin-bottom:16px;color:#cddcff;font-size:.91rem}
+.page li{margin-bottom:5px}
+.page a{color:var(--accent2);text-decoration:none;transition:.2s}
+.page a:hover{color:#fff;text-shadow:0 0 10px var(--glow)}
+code{background:rgba(16,185,129,0.2);padding:2px 8px;border-radius:6px;font-family:monospace;font-size:.84em;color:#86efac;border:1px solid rgba(16,185,129,0.3)}
+.codeblock{background:rgba(5,16,10,0.8);border:1px solid var(--border);border-radius:10px;padding:16px 18px;font-family:'Courier New',monospace;font-size:.8rem;color:#86efac;line-height:1.85;margin:12px 0 20px;overflow-x:auto;white-space:pre;backdrop-filter:blur(8px)}
+.fcard{background:var(--glass-bg);border-radius:var(--r-md);padding:16px 20px;margin-bottom:12px;border:1px solid var(--glass-border);transition:.2s;backdrop-filter:blur(10px)}
+.fcard:hover{border-color:var(--accent);box-shadow:0 6px 20px rgba(16,185,129,0.2)}
+.fq{font-weight:600;color:var(--accent2);margin-bottom:7px;font-size:.92rem}
+.fa{color:#cddcff;font-size:.86rem;line-height:1.65}
+table{width:100%;border-collapse:collapse;font-size:.85rem;margin:12px 0 20px}
+th{background:rgba(17,34,24,0.8);padding:9px 13px;text-align:left;color:var(--dim);font-weight:600;border-bottom:1px solid var(--border);backdrop-filter:blur(8px)}
+td{padding:9px 13px;border-bottom:1px solid var(--border2);color:#cddcff;vertical-align:top}
+tr:last-child td{border-bottom:none}
+hr{border:none;border-top:1px solid var(--border2);margin:22px 0}
+
+/* ===========================
+   FOOTER - Glass Style
+=========================== */
+.footer{margin-top:32px;text-align:center;padding-top:22px;border-top:1px solid var(--border2)}
+.footer-links{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;margin-bottom:12px}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:.8rem;transition:.2s}
+.footer-links a:hover{color:var(--dim);text-shadow:0 0 8px rgba(255,255,255,0.3)}
+.footer p{font-size:.73rem;color:var(--muted)}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+@media(max-width:680px){
+  .wrapper{padding:10px 11px 40px}
+  .box{padding:14px}
+  .nav{padding:7px 10px}
+  .nav a{padding:5px 10px;font-size:.74rem}
+  .nav-logo{display:none}
+  .hero h1{font-size:1.9rem}
+  #playerBox{min-height:240px}
+  .grid{grid-template-columns:1fr 1fr}
+  .embed-methods{grid-template-columns:1fr}
+}
+@media(max-width:420px){
+  .grid{grid-template-columns:1fr}
+}
+
+/* ===========================
+   COOKIE BANNER - Glass Style
+=========================== */
+.cookie-banner{
+  position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
+  width:calc(100% - 32px);max-width:520px;
+  background:rgba(10,30,20,0.85);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  border-radius:var(--r-lg);padding:18px 20px;
+  border:1px solid var(--glass-border);box-shadow:var(--glass-shadow),0 10px 40px rgba(0,0,0,0.5);
+  z-index:9999;display:none;animation:slideUp .3s ease;
+}
+.cookie-banner.show{display:block}
+@keyframes slideUp{from{opacity:0;transform:translate(-50%,30px)}to{opacity:1;transform:translate(-50%,0)}}
+.cookie-content{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.cookie-icon{font-size:2rem;flex-shrink:0;filter:drop-shadow(0 2px 8px rgba(16,185,129,0.4))}
+.cookie-text h4{font-size:.95rem;font-weight:600;color:#fff;margin-bottom:6px;background:linear-gradient(135deg,#fff,var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.cookie-text p{font-size:.78rem;color:var(--dim);line-height:1.5;margin:0}
+.cookie-text a{color:var(--accent2);text-decoration:none;transition:.2s}
+.cookie-text a:hover{color:#fff;text-shadow:0 0 8px var(--glow)}
+.cookie-buttons{display:flex;gap:10px;justify-content:flex-end}
+.cookie-btn{
+  padding:9px 20px;border-radius:var(--r-pill);font-size:.8rem;font-weight:600;
+  font-family:'Montserrat',sans-serif;cursor:pointer;transition:.25s cubic-bezier(0.4,0,0.2,1);
+  border:1px solid var(--glass-border);
+}
+.cookie-btn-primary{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;
+  box-shadow:0 4px 15px var(--glow);
+}
+.cookie-btn-primary:hover{
+  transform:translateY(-2px);box-shadow:0 6px 20px var(--glow);
+}
+.cookie-btn-secondary{
+  background:rgba(255,255,255,0.08);color:var(--dim);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.cookie-btn-secondary:hover{
+  background:rgba(255,255,255,0.15);color:#fff;
+}
+@media(max-width:680px){
+  .cookie-banner{width:calc(100% - 20px);bottom:10px;padding:14px 16px}
+  .cookie-content{gap:10px}
+  .cookie-icon{font-size:1.7rem}
+  .cookie-text h4{font-size:.85rem}
+  .cookie-text p{font-size:.72rem}
+  .cookie-buttons{flex-wrap:wrap}
+  .cookie-btn{padding:7px 16px;font-size:.75rem}
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#/" class="nav-logo">🎬 KinoPlayerTop</a>
+  <a href="#/player" data-p="player">▶ Плеер</a>
+  <a href="#/faq"    data-p="faq">❓ FAQ</a>
+  <a href="#/embed"  data-p="embed">🔌 Embed</a>
+</nav>
+
+<!-- COOKIE BANNER -->
+<div id="cookieBanner" class="cookie-banner">
+  <div class="cookie-content">
+    <div class="cookie-icon">🍪</div>
+    <div class="cookie-text">
+      <h4>Мы используем cookie</h4>
+      <p>Для улучшения работы сайта и анализа трафика мы используем файлы cookie. Продолжая использовать сайт, вы соглашаетесь с нашей <a href="#/privacy">политикой конфиденциальности</a>.</p>
+    </div>
+  </div>
+  <div class="cookie-buttons">
+    <button id="cookieAccept" class="cookie-btn cookie-btn-primary">Принять</button>
+    <button id="cookieDecline" class="cookie-btn cookie-btn-secondary">Отклонить</button>
+  </div>
+</div>
+
+<div class="box">
+
+<!-- ===== PLAYER ===== -->
+<div id="p-player" class="page">
+  <div class="ph">
+    <h2 id="playerTitle">🎥 KinoPlayerTop Плеер</h2>
+    <div class="badge" id="kpBadge">ID: —</div>
+  </div>
+  <div id="playerBox"></div>
+  <div class="hint">
+    💡 Адресная строка: <code>#/films/1234567</code> или <code>#/serials/1234567</code>
+  </div>
+</div>
+
+<!-- ===== LANDING ===== -->
+<div id="p-landing" class="page on">
+  <div class="hero">
+    <div class="hero-icon">🎬</div>
+    <h1>KinoPlayerTop</h1>
+    <p>Плеер нового поколения для фильмов и сериалов</p>
+    <a href="#/player" class="btn">▶ Смотреть сейчас</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FAQ ===== -->
+<div id="p-faq" class="page">
+  <h1>Часто задаваемые вопросы</h1>
+  <div class="fcard"><div class="fq">❓ Как найти ID фильма на Кинопоиске?</div><div class="fa">Откройте страницу фильма на kinopoisk.ru. В адресной строке будет ссылка вида <code>kinopoisk.ru/film/12345/</code> — число <strong>12345</strong> и есть ID.</div></div>
+  <div class="fcard"><div class="fq">❓ Как открыть фильм через Kinoplayer?</div><div class="fa">Введите в адресную строку: <code>kinoflex.app/#/films/ID</code> для фильма или <code>kinoflex.app/#/serials/ID</code> для сериала.</div></div>
+  <div class="fcard"><div class="fq">❓ Почему плеер не загружается?</div><div class="fa">Убедитесь что ID корректное число. Попробуйте: 1) сменить источник в меню плеера, 2) отключить блокировщик рекламы, 3) очистить кэш, 4) другой браузер.</div></div>
+  <div class="fcard"><div class="fq">❓ Нужна ли регистрация?</div><div class="fa">Нет. Kinoplayer полностью бесплатен, регистрация не требуется.</div></div>
+  <div class="fcard"><div class="fq">❓ Работает ли на телефоне?</div><div class="fa">Да, интерфейс полностью адаптивен. Работает на iOS Safari и Android Chrome.</div></div>
+  <div class="fcard"><div class="fq">❓ Как смотреть сериал по сериям?</div><div class="fa">При открытии сериала в плеере появляется меню выбора сезона и серии.</div></div>
+  <div class="fcard"><div class="fq">❓ Как встроить плеер на свой сайт?</div><div class="fa">Смотрите раздел <a href="#/embed">🔌 Embed</a> — там всё подробно описано с готовыми примерами кода.</div></div>
+  <div class="fcard"><div class="fq">❓ Что делать если ни один источник не работает?</div><div class="fa">Фильм может быть временно недоступен. Попробуйте зайти позже или поищите другой ID.</div></div>
+</div>
+
+<!-- ===== EMBED ===== -->
+<div id="p-embed" class="page">
+  <h1>Встроить плеер на сайт</h1>
+
+  <div class="embed-hero">
+    <h2>🔌 KinoplayerTop Embed</h2>
+    <p>Добавьте плеер Kinoplayer на любой сайт за 30 секунд. Три варианта интеграции — выбери удобный.</p>
+  </div>
+
+  <!-- ГЕНЕРАТОР КОДА -->
+  <div class="embed-demo">
+    <h3>⚙️ Генератор кода</h3>
+    <p style="font-size:.83rem;color:var(--muted);margin-bottom:10px">Введи ID Кинопоиска — получи готовый код</p>
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+      <input id="demoKpInput" type="number" placeholder="Например: 301" value="301">
+      <button id="demoGenBtn">Сгенерировать</button>
+    </div>
+    <div id="demoOutput"></div>
+  </div>
+
+  <div class="embed-methods">
+    <!-- Метод 1: Script -->
+    <div class="em">
+      <div class="em-badge">СПОСОБ 1</div>
+      <h3>Через kinoplayer.js</h3>
+      <p>Самый гибкий способ. Один скрипт — много плееров на странице.</p>
+      <div class="copy-wrap">
+        <pre class="code" id="code-script">&lt;div id="player"&gt;&lt;/div&gt;
+
+&lt;script src="https://kinoflex.app/kinoplayer.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  kinobox('#player', {
+    search: { kinopoisk: 301 }
+  });
+&lt;/script&gt;</pre>
+        <button class="copy-btn" onclick="copyCode('code-script',this)">Копировать</button>
+      </div>
+    </div>
+
+    <!-- Метод 2: iframe -->
+    <div class="em">
+      <div class="em-badge">СПОСОБ 2</div>
+      <h3>Через &lt;iframe&gt;</h3>
+      <p>Проще некуда — работает даже в конструкторах сайтов.</p>
+      <div class="copy-wrap">
+        <pre class="code" id="code-iframe">&lt;iframe
+  src="https://kinoflex.app/embed/#301"
+  width="100%"
+  height="500"
+  frameborder="0"
+  allowfullscreen
+  allow="autoplay; fullscreen"
+&gt;&lt;/iframe&gt;</pre>
+        <button class="copy-btn" onclick="copyCode('code-iframe',this)">Копировать</button>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+</div><!-- /wrapper -->
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+(function(){
+  var proxies = [
+    "https://secure-272717.vercel.app",
+    "https://secure-272717.tatnet.app",
+    "https://secure-ridge-22999-537c838d4a8a.herokuapp.com",
+    "https://proxy-video.vercel.app",
+    window.location.origin
+  ];
+
+  function normalize(base){
+    return base.replace(/\/$/, "") + "/kinoplayer.js";
+  }
+
+  function loadScript(url, onOk, onErr){
+    var s = document.createElement("script");
+    s.src = url;
+    s.async = true;
+    s.onload = onOk;
+    s.onerror = onErr;
+    document.head.appendChild(s);
+  }
+
+  function loadFrom(i){
+    if(i >= proxies.length){
+      console.error("[Kinoplayer] Не удалось загрузить ни с одного прокси.");
+      return;
+    }
+    var src = normalize(proxies[i]);
+    loadScript(src, function(){
+      console.info("[Kinoplayer] загружен:", src);
+    }, function(){
+      loadFrom(i + 1);
+    });
+  }
+
+  loadFrom(0);
+})();
+</script>
+<script src="ad.js"></script>
+<script src="titlename.js"></script>
+<script>
+/* ===========================
+   HASH ROUTER
+   Работает на любом хостинге.
+   Обновление страницы = всегда ок.
+=========================== */
+(function($){
+  var PAGES = ['player','landing','faq','embed','docs','terms','privacy'];
+  var playerInited = false;
+  var lastKpId = null;
+
+  /* --- парсим хэш --- */
+  function parseHash(){
+    var h = window.location.hash.replace(/^#\/?/,''); // убираем # и /
+    // /films/301 или /serials/301
+    var m = h.match(/^(films|serials)\/(\d+)/i);
+    if(m) return {page:'player', type:m[1].toLowerCase(), id:parseInt(m[2],10)};
+    // просто название страницы
+    if(PAGES.indexOf(h) !== -1) return {page:h};
+    // player без ID
+    if(h==='player') return {page:'player', type:'films', id:301};
+    return {page:'landing'};
+  }
+
+  /* --- показываем страницу --- */
+  function showPage(pageId){
+    $('.page').removeClass('on');
+    $('#p-'+pageId).addClass('on');
+    $('.nav a').removeClass('active');
+    $('.nav a[data-p="'+pageId+'"]').addClass('active');
+    if(pageId==='landing') $('.nav-logo').addClass('active');
+    else $('.nav-logo').removeClass('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  /* --- инициализация плеера --- */
+  function initPlayer(kpId){
+    if(!kpId || isNaN(kpId)) return;
+    showPage('player');
+    $('#kpBadge').text('ID: '+kpId);
+    var $box = $('#playerBox');
+
+    if(lastKpId === kpId && playerInited) return; // не перезапускать тот же
+    lastKpId = kpId;
+    playerInited = false;
+    $box.empty().html('<div style="padding:60px 20px;text-align:center;color:#6a78a3;font-size:13px">⏳ Загрузка...</div>');
+
+    function tryInit(startTs){
+      if(typeof window.kinobox==='function'){
+        $box.empty();
+        try{
+          window.kinobox('#playerBox', {search:{kinopoisk:kpId}});
+          playerInited = true;
+          if(window.kinoboxTitleName) window.kinoboxTitleName.update(kpId);
+        }catch(e){
+          console.error('[Kinoplayer]',e);
+          $box.html('<div style="padding:50px 20px;text-align:center;color:#fca5a5;font-size:13px">⚠️ Ошибка плеера. Обновите страницу.</div>');
+        }
+        return;
+      }
+
+      var elapsed = Date.now() - startTs;
+      if(elapsed < 30000){
+        setTimeout(function(){tryInit(startTs);},250);
+      } else {
+        $box.html(
+          '<div style="padding:50px 20px;text-align:center;color:#fca5a5;font-size:13px">'+
+          '⚠️ Плеер долго отвечает. Это не всегда проблема интернета — попробуйте отключить блокировщик рекламы и нажать «Повторить».<br><br>'+
+          '<button id="retryPlayerBtn" style="background:#3b5bdb;color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer">Повторить</button>'+
+          '</div>'
+        );
+        $('#retryPlayerBtn').one('click', function(){
+          $box.html('<div style="padding:60px 20px;text-align:center;color:#6a78a3;font-size:13px">⏳ Повторная загрузка...</div>');
+          setTimeout(function(){tryInit(Date.now());},100);
+        });
+      }
+    }
+    tryInit(Date.now());
+  }
+
+  /* --- роут --- */
+  function route(){
+    var r = parseHash();
+    if(r.page==='player' && r.id){
+      initPlayer(r.id);
+    } else {
+      showPage(r.page);
+    }
+  }
+
+  /* --- слушаем хэш --- */
+  window.addEventListener('hashchange', route);
+
+  /* --- генератор embed-кода --- */
+  function genEmbedCode(kpId){
+    var domain = window.location.origin;
+    var scriptCode =
+      '<div id="player"></div>\n\n'+
+      '<script src="'+domain+'/kinoplayer.js"><\/script>\n'+
+      '<script>\n'+
+      '  kinobox(\'#player\', {\n'+
+      '    search: { kinopoisk: '+kpId+' }\n'+
+      '  });\n'+
+      '<\/script>';
+    var iframeCode =
+      '<iframe\n'+
+      '  src="'+domain+'/embed/#'+kpId+'"\n'+
+      '  width="100%"\n'+
+      '  height="500"\n'+
+      '  frameborder="0"\n'+
+      '  allowfullscreen\n'+
+      '  allow="autoplay; fullscreen"\n'+
+      '></iframe>';
+    return {script: scriptCode, iframe: iframeCode};
+  }
+
+  function updateDemoCodes(kpId){
+    var c = genEmbedCode(kpId);
+    // обновляем статичные блоки
+    $('#code-script').text(c.script);
+    $('#code-iframe').text(c.iframe);
+    // динамический вывод
+    $('#demoOutput').html(
+      '<div style="margin-top:12px">' +
+      '<div class="copy-wrap"><pre class="code" id="gen-script">'+escHtml(c.script)+'</pre><button class="copy-btn" onclick="copyCode(\'gen-script\',this)">Копировать</button></div>'+
+      '<div style="margin-top:10px;font-size:.8rem;color:var(--muted)">iframe вариант:</div>'+
+      '<div class="copy-wrap"><pre class="code" id="gen-iframe">'+escHtml(c.iframe)+'</pre><button class="copy-btn" onclick="copyCode(\'gen-iframe\',this)">Копировать</button></div>'+
+      '</div>'
+    );
+  }
+
+  function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+  /* --- инит при загрузке --- */
+  $(function(){
+    // Если пришли на страницу с хэшем — роутим
+    route();
+
+    // Обновляем коды embed при загрузке страницы
+    updateDemoCodes(301);
+
+    // Кнопка генератора
+    $('#demoGenBtn').on('click',function(){
+      var v = parseInt($('#demoKpInput').val(),10);
+      if(!v || isNaN(v)){alert('Введите корректный числовой ID');return;}
+      updateDemoCodes(v);
+    });
+  });
+
+})(jQuery);
+
+/* --- копирование кода --- */
+function copyCode(id, btn){
+  var text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(function(){
+    btn.textContent='✓ Скопировано';
+    btn.classList.add('ok');
+    setTimeout(function(){btn.textContent='Копировать';btn.classList.remove('ok');},2000);
+  }).catch(function(){
+    // fallback
+    var ta = document.createElement('textarea');
+    ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    btn.textContent='✓ Скопировано';btn.classList.add('ok');
+    setTimeout(function(){btn.textContent='Копировать';btn.classList.remove('ok');},2000);
+  });
+}
+
+/* ===========================
+   COOKIE & ANALYTICS
+=========================== */
+(function(){
+  function setCookie(name, value, days){
+    var expires = "";
+    if(days){
+      var date = new Date();
+      date.setTime(date.getTime() + (days*24*60*60*1000));
+      expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
+  }
+  function getCookie(name){
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++){
+      var c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+      if(c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+  }
+  function generateId(){
+    return 'kp_' + Math.random().toString(36).substr(2,9) + '_' + Date.now().toString(36);
+  }
+  
+  // Инициализация пользователя
+  var userId = getCookie('kp_user_id');
+  if(!userId){
+    userId = generateId();
+    setCookie('kp_user_id', userId, 365);
+  }
+  
+  // Собираем данные о сессии
+  var sessionId = getCookie('kp_session_id');
+  if(!sessionId){
+    sessionId = generateId();
+    setCookie('kp_session_id', sessionId, 1);
+  }
+  
+  // Сохраняем первый визит
+  if(!getCookie('kp_first_visit')){
+    setCookie('kp_first_visit', new Date().toISOString(), 365);
+  }
+  
+  // Последний визит
+  setCookie('kp_last_visit', new Date().toISOString(), 30);
+  
+  // Предпочтения
+  var prefs = {
+    theme: getCookie('kp_theme') || 'dark',
+    lang: getCookie('kp_lang') || 'ru'
+  };
+  setCookie('kp_theme', prefs.theme, 365);
+  setCookie('kp_lang', prefs.lang, 365);
+  
+  console.log('[Kinoplayer] User initialized:', userId);
+  
+  // Cookie Banner Logic
+  function showCookieBanner(){
+    var consent = getCookie('kp_cookie_consent');
+    if(!consent){
+      setTimeout(function(){
+        var banner = document.getElementById('cookieBanner');
+        if(banner) banner.classList.add('show');
+      }, 1500);
+    }
+  }
+  
+  function acceptCookies(){
+    setCookie('kp_cookie_consent', 'accepted', 365);
+    hideCookieBanner();
+  }
+  
+  function declineCookies(){
+    setCookie('kp_cookie_consent', 'declined', 365);
+    hideCookieBanner();
+  }
+  
+  function hideCookieBanner(){
+    var banner = document.getElementById('cookieBanner');
+    if(banner){
+      banner.classList.remove('show');
+      setTimeout(function(){
+        banner.style.display = 'none';
+      }, 300);
+    }
+  }
+  
+  // Initialize cookie banner
+  document.addEventListener('DOMContentLoaded', function(){
+    showCookieBanner();
+    
+    var acceptBtn = document.getElementById('cookieAccept');
+    var declineBtn = document.getElementById('cookieDecline');
+    
+    if(acceptBtn){
+      acceptBtn.addEventListener('click', acceptCookies);
+    }
+    if(declineBtn){
+      declineBtn.addEventListener('click', declineCookies);
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+/*!
+ * kinobox.css — Kinoplayer.top
+ * Подключи этот файл если используешь kinobox.js на своём сайте
+ * Зеленая гамма - Жидкое Стекло (Glassmorphism) - Production Ready
+ */
+
+/* Стили инжектируются автоматически через kinobox.js.
+   Этот файл нужен только если ты хочешь переопределить стили. */
+
+
+:root {
+  --kb-glass-bg: rgba(5, 20, 15, 0.90);
+  --kb-glass-border: rgba(16, 185, 129, 0.30);
+  --kb-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  --kb-glass-blur: blur(20px);
+  --kb-accent: #8b5cf6;
+  --kb-accent2: #a78bfa;
+  --kb-accent-glow: rgba(16, 185, 129, 0.7);
+  --kb-text: #ffffff;
+  --kb-text-dim: rgba(255, 255, 255, 0.88);
+  --kb-bg-deep: rgba(5, 20, 15, 0.95);
+}
+
+.kb__wrap {
+  width: 100%;
+  font-family: "Montserrat", "Segoe UI", sans-serif;
+  background: var(--kb-glass-bg);
+  backdrop-filter: var(--kb-glass-blur);
+  -webkit-backdrop-filter: var(--kb-glass-blur);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--kb-glass-border);
+  box-shadow: var(--kb-glass-shadow), inset 0 0 30px rgba(255, 255, 255, 0.05);
+}
+
+.kb__menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 12px;
+  background: rgba(10, 35, 26, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--kb-glass-border);
+}
+
+.kb__btn {
+  cursor: pointer;
+  padding: 6px 15px;
+  border-radius: 30px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--kb-text-dim);
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid var(--kb-glass-border);
+  transition: all .25s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.kb__btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transition: left .4s;
+}
+
+.kb__btn:hover::before {
+  left: 100%;
+}
+
+.kb__btn:hover { 
+  background: rgba(16, 185, 129, 0.28); 
+  color: #fff; 
+  box-shadow: 0 4px 15px var(--kb-accent-glow);
+}
+
+.kb__btn.kb__active {
+  background: linear-gradient(135deg, var(--kb-accent), var(--kb-accent2));
+  color: #fff;
+  border-color: var(--kb-accent);
+  box-shadow: 0 1px 8px var(--kb-accent-glow), inset 0 0 15px rgba(255,255,255,0.2);
+}
+
+.kb__frame {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+}
+
+.kb__frame iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: none;
+  background: #000;
+}
+
+.kb__loading {
+  padding: 60px 20px;
+  text-align: center;
+  color: #6a8a7a;
+  font-size: 13px;
+}
+
+.kb__error {
+  padding: 40px 20px;
+  text-align: center;
+  color: #fca5a5;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* Уникальные стили для kinoplayer — загрузка, ошибки, меню */
+.kinobox_loader.svelte-l0obux {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, #1a1a2e 0%, #0f0f1a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kinobox_loader.svelte-l0obux::before {
+  content: '';
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(99, 102, 241, 0.2);
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: kp-spin 1s linear infinite;
+}
+
+@keyframes kp-spin {
+  to { transform: rotate(360deg); }
+}
+
+.kinobox_message.svelte-l0obux {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  height: 100%;
+  padding: 24px;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  font: 24px 'Segoe UI', system-ui, sans-serif;
+  color: #e0e0ff;
+  text-align: center;
+}
+
+.kinobox_button_refresh.svelte-l0obux {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border: none;
+  border-radius: 12px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+  transition: all 0.2s ease;
+}
+
+.kinobox_button_refresh.svelte-l0obux:hover {
+  background: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+  transform: translateY(-2px);
+}
+
+.kinobox_button_refresh.svelte-l0obux:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
+}
