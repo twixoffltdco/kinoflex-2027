@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HDPlayer</title>
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}iframe{position:absolute;inset:0;width:100%;height:100%;border:0}</style>
+</head>
+<body>
+<script>
+(function(){
+  var p = new URLSearchParams(location.search);
+  var kp = p.get("kinopoisk") || p.get("kp") || p.get("id") || "";
+  var embed = p.get("embed") || p.get("url") || "";
+  var src = kp ? ("https://hdplayer.click/embed/" + encodeURIComponent(kp)) : embed;
+  if (!src) {
+    document.body.innerHTML = '<p style="color:#999;font-family:sans-serif;padding:20px">Нужен kp ID</p>';
+    return;
+  }
+  var f = document.createElement("iframe");
+  f.src = src;
+  f.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen";
+  f.allowFullscreen = true;
+  document.body.appendChild(f);
+})();
+</script>
+</body>
+</html>
