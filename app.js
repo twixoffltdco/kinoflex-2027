@@ -10,8 +10,8 @@
   var currentType  = 'films';
   var CONTAINER    = '#kinoboxContainer';
   var DEFAULT_ID   = 301;
-  var MAX_PLAYER_RETRIES = 3;
-  var RETRY_DELAY_MS = 1800;
+  var MAX_PLAYER_RETRIES = 5;
+  var RETRY_DELAY_MS = 2500;
   var playerWatchTimer = null;
   var playerWatchObserver = null;
 
